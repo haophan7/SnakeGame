@@ -7,10 +7,14 @@
 - Quit: thoát trò chơi.
 
 ## Hình ảnh Demo:
-![Screenshot 2024-05-18 230852](https://github.com/haophan7/TranslateVideoYoutube/assets/106468186/cbd760a4-aa0c-45f7-a2e4-b31da244d7ce)
-
+- Giao diện chính:
 ![image](https://github.com/user-attachments/assets/2847b778-106a-48db-a06c-0c5ed2a415af)
 
+- Chế độ Classic:
+![image](https://github.com/user-attachments/assets/1ec64db2-bbca-4e34-9a88-68d27c58c06a)
+
+- Chế độ Campaign:
+![image](https://github.com/user-attachments/assets/1fb66e30-bacc-4b04-b701-75a8470514b2)
 
 ## Build source code:
 Thông tin về source code:
