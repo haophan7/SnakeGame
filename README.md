@@ -1,28 +1,16 @@
-# TranslateVideoYoutube - Ứng dụng dịch video trên Youtube
+# SnakeGame - Ứng dụng trò chơi game con rắn
 
-## Mô tả: ứng dụng Translate Video Yotube là dùng để dịch các video trên Youtube sang tiếng Việt, bao gồm các tính năng sau:
+## Mô tả: ứng dụng Snake Game là ứng dụng trò chơi cực kỳ nổi tiếng, giao diện chính trò chơi bao gồm các chế độ như Classic, Campaign và Quit:
 
-- Translate Video: dịch video sang tiếng Việt sau khi đã nhập đường dẫn video Youtube ở mục Enter Youtube Video URL or Choose MP4 File và chọn ngôn ngữ của video ở mục Select Language
-- Clear: xóa tất cả văn bản trong ô input
-- Download: dùng để tải xuống video từ Youtube khi người dùng đã nhập đường dẫn video Youtube ở mục Enter Youtube Video URL or Choose MP4 File và chọn ngôn ngữ của video ở mục Select Language
-- Show Downloaded Videos: hiển thị danh sách các video đã tải xuống từ Youtube, chọn video và bấm nút "Play" để phát video hoặc bấm nút "Delete" để xóa video
-- Youtube: mở trang chủ Youtube
-- Convert: dịch file mp4 sang văn bản khi chọn Choose File và bấm chọn file mp4 có sẵn trong máy, đường dẫn file mp4 sẽ hiển thị vào ô input ở mục Enter Youtube Video URL và chọn ngôn ngữ của file mp4 ở mục Select Language
-- Translate Text: dịch văn bản sang tiếng Việt khi đã nhập văn bản vào ô input ở mục Enter Text to Translate và chọn ngôn ngữ đã nhập vào ô ở mục Select Language
-- Check Language: kiểm tra ngôn ngữ của video, file mp4, văn bản trong ô input và sẽ tự động chuyển sang ngôn ngữ gốc
-- Facebook, Twitter, Instagram, Google,...: mở trang chủ của các nền tảng mạng xã hội phổ biến
-- Game: được viết riêng để thỏa nhu cầu giải trí và đồng thời cũng giúp bản thân nâng cao khả năng tư duy, sáng tạo trong lĩnh vực này
+- Classic: đây là chế độ chơi cơ bản, người chơi sẽ điều khiển rắn đi lên, xuống, trái, phải để ăn thức ăn, mỗi viên thức ăn tương ứng 1 điểm và rắn sẽ dài ra thêm 1 đơn vị khi ăn thức ăn. Tốc độ ban đầu của rắn là 5, sau mỗi khi ăn 5 viên thức ăn thì tốc độ sẽ tăng lên 1 đơn vị, đặc biệt là lúc này sẽ xuất hiện viên thức ăn lớn, nếu rắn ăn được viên này sẽ được cộng thêm 5 điểm. Người chơi khi điều khiển rắn tự cắn vào cơ thể mình và điểm số người chơi sẽ được hiển thị trên màn hình.
+- Campaign: đây là chế độ chơi nâng cao, người chơi sẽ phải vượt qua 5 màn chơi để chiến thắng, mỗi màn chơi sẽ có những chướng ngại vật khác nhau. Trong mỗi màn chơi, người chơi sẽ phải điều khiển sao cho rắn không được chạm vào chướng ngại vật, ăn đủ 20 viên thức ăn thì sẽ có ô vào thành, đưa rắn vào ô này thì sẽ chuyển sang màn kế tiếp, cứ như thế đến khi vào ô này ở màn 5 thì người chơi sẽ thắng cuộc. Người chơi thua khi điều khiển rắn tự cắn vào cơ thể mình hoặc chạm vào chướng ngại vật và điểm số sẽ được hiển thị trên màn hình.
+- Quit: thoát trò chơi.
 
 ## Hình ảnh Demo:
 ![Screenshot 2024-05-18 230852](https://github.com/haophan7/TranslateVideoYoutube/assets/106468186/cbd760a4-aa0c-45f7-a2e4-b31da244d7ce)
 
-Để chạy được demo như ảnh trên, người dùng có thể chạy chương trình build sẵn (.exe) tại đường dẫn:
-```bash
-C:\Users\Hao\PycharmProjects\TranslateVideoYoutube\main\main.exe
-```
+![image](https://github.com/user-attachments/assets/2847b778-106a-48db-a06c-0c5ed2a415af)
 
-Người dùng cần phải cài đặt các module cần thiết để chạy được file trên, có thể xem tham khảo ở link sau: 
-https://www.python.org/doc/
 
 ## Build source code:
 Thông tin về source code:
