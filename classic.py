@@ -1,0 +1,250 @@
+import pygame
+import random
+import sys
+import time
+
+# Các hằng số
+SCREEN_WIDTH = 800
+SCREEN_HEIGHT = 600
+CELL_SIZE = 20
+
+# Màu sắc
+WHITE = (255, 255, 255)
+GREEN = (0, 255, 0)
+BLUE = (205, 133, 63)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
+PINK = (255, 165, 79)
+YELLOW = (255, 215, 0)
+GRAY = (128, 128, 128)
+ROYAL = (65, 105, 225)
+
+# Khởi tạo biến high score
+high_score = 0
+
+# Hàm vẽ rắn
+def draw_snake(surface, snake):
+    # Vẽ đầu con rắn
+    pygame.draw.rect(surface, PINK, (snake[0][0], snake[0][1], CELL_SIZE, CELL_SIZE))
+    # Vẽ mắt
+    pygame.draw.circle(surface, BLACK, (snake[0][0] + 5, snake[0][1] + 5), 2)
+    pygame.draw.circle(surface, BLACK, (snake[0][0] + 15, snake[0][1] + 5), 2)
+    # Vẽ lưỡi con rắn
+    pygame.draw.rect(surface, RED, (snake[0][0] + 5, snake[0][1] + 10, 10, 4))
+    # Vẽ thân con rắn
+    for segment in snake[1:]:
+        pygame.draw.rect(surface, GREEN, (segment[0], segment[1], CELL_SIZE, CELL_SIZE))
+    # Vẽ các đốt trên lưng con rắn
+    for segment in snake[1:]:
+        pygame.draw.circle(surface, ROYAL, (segment[0] + CELL_SIZE // 2, segment[1] + CELL_SIZE // 2), 4)
+
+# Hàm vẽ thức ăn
+def draw_food(surface, food_positions, orange_positions):
+    for food in food_positions:
+        pygame.draw.rect(surface, BLUE, (food[0], food[1], CELL_SIZE, CELL_SIZE))
+    for orange in orange_positions:
+        pygame.draw.rect(surface, YELLOW, (orange[0], orange[1], CELL_SIZE, CELL_SIZE))
+
+# Tạo thức ăn mới
+def create_food(snake):
+    food_position = [random.randrange(0, SCREEN_WIDTH, CELL_SIZE), random.randrange(40, SCREEN_HEIGHT, CELL_SIZE)]
+    while food_position in snake or any(distance(food_position, segment) < 10 for segment in snake):
+        food_position = [random.randrange(0, SCREEN_WIDTH, CELL_SIZE), random.randrange(40, SCREEN_HEIGHT, CELL_SIZE)]
+    return food_position
+
+# Khoảng cách giữa hai điểm
+def distance(p1, p2):
+    return ((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2) ** 0.5
+
+# Kiểm tra va chạm
+def check_collision(snake):
+    return len(snake) != len(set(map(tuple, snake)))
+
+# Hiển thị thông báo và xử lý việc chơi lại
+def display_message(screen, message, score):
+    global high_score
+    font = pygame.font.SysFont("monospace", 36)
+    text = font.render(message, True, GRAY)
+    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    screen.blit(text, text_rect)
+    pygame.display.flip()
+    pygame.time.wait(10000)
+
+    if score > high_score:
+        high_score = score
+
+    # Ẩn điểm số và điểm cao
+    screen.fill(WHITE)
+    pygame.display.flip()
+
+    text = font.render("Do you want to play again? (Y/N)", True, RED)
+    text_rect = text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+    screen.blit(text, text_rect)
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_y:
+                    return True
+                elif event.key == pygame.K_n:
+                    return False
+
+# Hàm main
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("Snake Xenzia")
+    icon = pygame.image.load("snake.png")
+    pygame.display.set_icon(icon)
+
+    clock = pygame.time.Clock()
+    orange_start_time = pygame.time.get_ticks()
+
+    running = True
+    while running:
+        # Khởi tạo con rắn ở giữa màn hình với độ dài là 2
+        snake = [[SCREEN_WIDTH // 2 + CELL_SIZE, SCREEN_HEIGHT // 2], [SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2]]
+        direction = None
+
+        food_positions = [create_food(snake)]
+        orange_positions = []
+
+        food_eaten_count = 0
+        score = 0  # Điểm số ban đầu
+        displaying_message = False
+        speed_up_counter = 0  # Biến để đếm số lượng thức ăn đã ăn
+        FPS = 5  # Đặt tốc độ ban đầu
+        snake_started_moving = False  # Biến để kiểm tra xem con rắn đã bắt đầu di chuyển chưa
+
+        # Hiển thị điểm số và điểm cao từ đầu
+        screen.fill(WHITE)
+        font = pygame.font.SysFont("monospace", 24)
+        score_text = font.render("Score: " + str(score), True, BLACK)
+        screen.blit(score_text, (10, 10))
+        high_score_text = font.render("High Score: " + str(high_score), True, BLACK)
+        screen.blit(high_score_text, (SCREEN_WIDTH - 220, 10))
+
+        # Hiển thị tốc độ
+        speed_text = font.render("Speed: " + str(FPS), True, BLACK)
+        screen.blit(speed_text, (SCREEN_WIDTH // 2 - 90, 10))
+
+        # Hiển thị con rắn
+        draw_snake(screen, snake)
+
+        # Hiển thị thức ăn
+        draw_food(screen, food_positions, orange_positions)
+
+        # Hiển thị dòng kẻ ngang dưới score và high_score.txt
+        pygame.draw.rect(screen, BLACK, (0, 38, SCREEN_WIDTH, 2))
+
+        pygame.display.flip()
+
+        while not direction:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key in [pygame.K_RIGHT, pygame.K_UP, pygame.K_DOWN]:
+                        direction = event.key
+
+        if not running:
+            break
+
+        while True:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_LEFT and direction != pygame.K_RIGHT:
+                        direction = pygame.K_LEFT
+                    elif event.key == pygame.K_RIGHT and direction != pygame.K_LEFT:
+                        direction = pygame.K_RIGHT
+                    elif event.key == pygame.K_UP and direction != pygame.K_DOWN:
+                        direction = pygame.K_UP
+                    elif event.key == pygame.K_DOWN and direction != pygame.K_UP:
+                        direction = pygame.K_DOWN
+
+            if not running:
+                break
+
+            if direction is not None and not displaying_message:
+                if not snake_started_moving:
+                    snake_started_moving = True
+
+                keys = pygame.key.get_pressed()
+                if direction == pygame.K_LEFT and direction != pygame.K_RIGHT:
+                    new_head = [snake[0][0] - CELL_SIZE, snake[0][1]]
+                elif direction == pygame.K_RIGHT and direction != pygame.K_LEFT:
+                    new_head = [snake[0][0] + CELL_SIZE, snake[0][1]]
+                elif direction == pygame.K_UP and direction != pygame.K_DOWN:
+                    new_head = [snake[0][0], snake[0][1] - CELL_SIZE]
+                    if new_head[1] <= 30:
+                        new_head[1] = SCREEN_HEIGHT - CELL_SIZE
+                elif direction == pygame.K_DOWN and direction != pygame.K_UP:
+                    new_head = [snake[0][0], snake[0][1] + CELL_SIZE]
+                    if new_head[1] >= SCREEN_HEIGHT:
+                        new_head[1] = 40
+
+                if new_head[0] >= SCREEN_WIDTH:
+                    new_head[0] = 0
+                elif new_head[0] < 0:
+                    new_head[0] = SCREEN_WIDTH - CELL_SIZE
+                elif new_head[1] >= SCREEN_HEIGHT:
+                    new_head[1] = 0
+                elif new_head[1] < 0:
+                    new_head[1] = SCREEN_HEIGHT - CELL_SIZE
+
+                snake.insert(0, new_head)
+
+                if check_collision(snake):
+                    displaying_message = True
+                    if not display_message(screen, "You lost! Your Score Is: " + str(score), score):
+                        running = False
+                    break
+
+                if snake[0] in food_positions:
+                    food_positions.remove(snake[0])
+                    score += 1  # Cộng điểm khi ăn thức ăn đỏ
+                    food_eaten_count += 1
+                    if food_eaten_count % 5 == 0:
+                        # Tăng tốc độ sau mỗi 5 viên thức ăn
+                        FPS += 1
+                        orange_positions.append(create_food(snake))
+                        food_positions.append(create_food(snake))
+                        orange_start_time = pygame.time.get_ticks()
+                    else:
+                        food_positions.append(create_food(snake))
+                elif snake[0] in orange_positions:
+                    orange_positions.remove(snake[0])
+                    score += 5  # Cộng điểm khi ăn thức ăn cam
+                else:
+                    snake.pop()
+
+                if orange_positions and pygame.time.get_ticks() - orange_start_time >= 5000:
+                    orange_positions = []
+
+                screen.fill(WHITE)
+                pygame.draw.rect(screen, BLACK, (0, 38, SCREEN_WIDTH, 2))
+                draw_snake(screen, snake)
+                draw_food(screen, food_positions, orange_positions)
+                score_text = font.render("Score: " + str(score), True, BLACK)
+                screen.blit(score_text, (10, 10))
+                high_score_text = font.render("High Score: " + str(high_score), True, BLACK)
+                screen.blit(high_score_text, (SCREEN_WIDTH - 220, 10))
+                speed_text = font.render("Speed: " + str(FPS), True, BLACK)
+                screen.blit(speed_text, (SCREEN_WIDTH // 2 - 90, 10))
+                pygame.display.flip()
+
+                clock.tick(FPS)
+
+            else:
+                displaying_message = False
+                screen.fill(WHITE)
+                pygame.display.flip()
+
+    pygame.quit()
+
+if __name__ == "__main__":
+    main()
